@@ -10,6 +10,6 @@ public class Sim {
 		// - set up primary sim variables (top speed, exit speed, cars joining per second, time, sim hz, camera start x and y positions, road dimensions and positions....)
 		// - set up sim, create cars at random points
 		// - set up sim "physics," handle movements of cars (or attempts at movements) crashes (cars intersecting) etc
-		// - set up car AI's
+		// - set up car AI's, we already have the beginnings of an outline.
 	}
 }
