@@ -1,9 +1,14 @@
 package Simulator;
+import java.awt.Dimension;
 import java.awt.Graphics;
-import javax.swing.JFrame;
-import java.awt.Color;
 
-public class Sim extends JFrame{
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+
+import java.awt.Color;
+import java.awt.image.BufferStrategy;
+
+public class Sim{
 	public static void main(String[] Args){
 		boolean running = true;
 		
@@ -23,15 +28,14 @@ public class Sim extends JFrame{
 	}
 	
 	public Sim(){
-		setTitle("TrafficSim");
-		setSize(500, 500);
-		setVisible(true);
-		setDefaultCloseOperation(EXIT_ON_CLOSE);
+		JFrame frame = new JFrame("TrafficSim");
+		JPanel panel = (JPanel) frame.getContentPane();
+		panel.setPreferredSize(new Dimension(500,500));
+		panel.setBounds(0,0,800,600);
+		frame.setIgnoreRepaint(true);
+		frame.pack();
+		frame.setVisible(true);
+		frame.createBufferStrategy(2);
+		BufferStrategy strategy = frame.getBufferStrategy();
 	}
-
-	public void paint(Graphics g){
-		g.setColor(Color.BLUE);
-		g.fillRect(0, 0, 100, 100);
-	}
-
 }
