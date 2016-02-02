@@ -3,7 +3,11 @@ package Simulator;
 import java.awt.Color;
 import java.awt.Graphics;
 
-public class Car_One {
+import javax.swing.JPanel;
+
+import Simulator.Camera;
+
+public class Car_One extends JPanel {
 	private int setSpeed; //This is the speed the car wants to go
 	private int setLane; // -1 = left, 0= no change, 1 = right
 	private Color color; //This is the color of the car
@@ -33,7 +37,8 @@ public class Car_One {
 		}
 		//eventually here we will set the x and y coordinates of the car to wherever the spawnpoint is
 	}
-	public void drawMe(Graphics g,Camera cam){
+	public void paintComponent(Graphics g,Camera cam){
+		super.paintComponent(g);
 		g.setColor(color);
 		g.fillRect(posX - cam.X(), posY-cam.Y(), 50, 100);
 	}

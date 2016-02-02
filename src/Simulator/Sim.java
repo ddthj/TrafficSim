@@ -5,6 +5,8 @@ import java.awt.Graphics2D;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
+import Simulator.Camera;
+
 import java.awt.Color;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -101,7 +103,7 @@ public class Sim{
 			g.setColor(Color.black);
 			g.fillRect(200-(cam.X()), 0-(cam.Y()), 200, 1000);
 			for(Car_One c: cars){
-				c.drawMe(g,cam); //this will render out all the cars, we send our Graphics helper to each car
+				c.paintComponent(g,cam); //this will render out all the cars, we send our Graphics helper to each car
 			}
 			
 			//this is where the render function will be called... IF WE CODED ONE!
