@@ -1,19 +1,35 @@
 package Simulator;
-import java.awt.Dimension;
+import java.awt.Color;
+import java.awt.Graphics;
 import java.awt.Graphics2D;
-
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-
-import java.awt.Color;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.awt.image.BufferStrategy;
 import java.util.ArrayList;
 
-public class Sim{
+@SuppressWarnings("serial")
+public class Sim extends JPanel{
 	boolean running = true;
+	static Camera cam = new Camera(0,0,500,1500);
+	
+	
+	//@Override
+	public void paint(Graphics g){
+		Graphics2D g2d = (Graphics2D) g;
+		g2d.setColor(Color.green); //setting it's color to green
+		g2d.fillRect(0, 0, 600, 1500); //making a square of the set color
+		g2d.setColor(Color.black);
+		g2d.fillRect(200-(cam.X()), 0-(cam.Y()), 200, 1500);
+		g2d.setColor(Color.white);
+		g2d.fillRect(265-cam.X(), 0-cam.Y(), 5, 1500);
+		g2d.fillRect(330-cam.X(), 0-cam.Y(), 5, 1500);
+	}
+	
+	
 	public static void main(String[] Args){		
+		
+		boolean running = true;
 		
 		//Things we need to thing:
 		//
@@ -24,13 +40,6 @@ public class Sim{
 		// 0%- set up sim "physics," handle movements of cars (or attempts at movements) crashes (cars intersecting) etc
 		//10% - set up car AI's, we already have the beginnings of an outline.		
 	   
-		Sim s = new Sim();
-	}
-	
-	public Sim(){
-		//setting up some variables:
-		Camera cam = new Camera(0,0,500,1500);
-		
 		long time = 0;
 		int oldtime = 0;
 		int rampspeed = 10;
@@ -41,13 +50,8 @@ public class Sim{
 		//Making JFrame
 		
 		JFrame frame = new JFrame("TrafficSim");
-		JPanel panel = (JPanel) frame.getContentPane();
-		panel.setPreferredSize(new Dimension(600,900));
-		panel.setBounds(0,0,800,600);
-		frame.setIgnoreRepaint(true);
-		frame.pack();
+		frame.setSize(500, 500);
 		frame.setVisible(true);
-		frame.createBufferStrategy(2);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		//Below we use a function that can execute when a keyboard key is pressed
 		
@@ -83,12 +87,12 @@ public class Sim{
 	    });
 		//some final bits before we get going
 		
-		BufferStrategy strategy = frame.getBufferStrategy();
 		ArrayList<Car_One> cars = new ArrayList<Car_One>();
 		long starttime = System.nanoTime()/1000000000;
 		//get going
 		
 		while(running){
+			repaint();
 			
 			time = (System.nanoTime()/1000000000) - starttime; //this allows us to see how many seconds the sim has been running
 			
@@ -99,14 +103,6 @@ public class Sim{
 			}
 			
 			
-			Graphics2D g = (Graphics2D) strategy.getDrawGraphics(); //making a small graphics helper
-			g.setColor(Color.green); //setting it's color to green
-			g.fillRect(0, 0, 600, 1500); //making a square of the set color
-			g.setColor(Color.black);
-			g.fillRect(200-(cam.X()), 0-(cam.Y()), 200, 1500);
-			g.setColor(Color.white);
-			g.fillRect(265-cam.X(), 0-cam.Y(), 5, 1500);
-			g.fillRect(330-cam.X(), 0-cam.Y(), 5, 1500);
 			
 			//this is where the sim moves and renders all the cars
 			for(Car_One c: cars){
@@ -145,20 +141,12 @@ public class Sim{
 					
 				}
 				c.move(c.X(), c.Y()+c.speed());
-				
-				
-				
-				c.drawMe(g,cam); //this will render out all the cars, we send our Graphics helper to each car
+				//c.paintComponent(g,cam); //this will render out all the cars, we send our Graphics helper to each car
 			}
 			
 			//this is where the render function will be called... IF WE CODED ONE!
 			//for car in arraylist, car.render(g);
-			
-			g.dispose(); //kill the graphics helper
-			strategy.show(); //update the display
-			
 			try { Thread.sleep(10); } catch (Exception e) {}	//limits out FPS a tad on purpose
 		}
-		
 	}
 }

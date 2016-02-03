@@ -1,10 +1,9 @@
 package Simulator;
 
 import java.awt.Color;
-import java.awt.Graphics;
 import java.util.ArrayList;
 
-public class Car_One {
+public class Car_One{
 	private int setSpeed; //This is the speed the car wants to go
 	private int setLane; // -1 = left, 0= no change, 1 = right
 	private Color color; //This is the color of the car
@@ -38,10 +37,6 @@ public class Car_One {
 	
 	//Below are a ton of small functions so that the sim may simulate the car properly
 	
-	public void drawMe(Graphics g,Camera cam){
-		g.setColor(color);
-		g.fillRect(posX - cam.X(), posY-cam.Y(), 50, 100);
-	}
 	public boolean isBlink(){	
 		return blinker;
 	}
