@@ -25,17 +25,19 @@ public class Sim{
 		//10% - set up car AI's, we already have the beginnings of an outline.		
 	   
 		Sim s = new Sim();
-		
-
 	}
-	
 	
 	public Sim(){
 		//setting up some variables:
-		Camera cam = new Camera(0,0,600,1000);
+		Camera cam = new Camera(0,0,500,1500);
 		
 		long time = 0;
 		int oldtime = 0;
+		int rampspeed = 10;
+		int topspeed = 20;
+		int acceleration = 1;
+		
+		
 		//Making JFrame
 		
 		JFrame frame = new JFrame("TrafficSim");
@@ -56,7 +58,7 @@ public class Sim{
 
 	        @Override
 	        public void keyPressed(KeyEvent e) {
-	            System.out.println("Key pressed code=" + e.getKeyCode() + ", char=" + e.getKeyChar());
+	            //System.out.println("Key pressed code=" + e.getKeyCode() + ", char=" + e.getKeyChar());
 	            if(e.getKeyCode() == 38){
 	            	cam.changeY(-10);
 	            }
@@ -71,6 +73,7 @@ public class Sim{
 	            }
 	            if(e.getKeyCode() == 27){
 	            	running = false;
+	            
 	            }
 	          }
 	    
@@ -86,9 +89,10 @@ public class Sim{
 		//get going
 		
 		while(running){
+			
 			time = (System.nanoTime()/1000000000) - starttime; //this allows us to see how many seconds the sim has been running
 			
-			if(oldtime+10 <= (int)time){
+			if(oldtime+2 <= (int)time){
 				cars.add(new Car_One(Color.blue, 1, 2));
 				cars.add(new Car_One(Color.red, 2, 2));		//this is where we will be adding cars by second, or in current case by 10 seconds
 				cars.add(new Car_One(Color.yellow, 3, 2)); // car values are predetermined here, but later they will be random
@@ -97,10 +101,53 @@ public class Sim{
 			
 			Graphics2D g = (Graphics2D) strategy.getDrawGraphics(); //making a small graphics helper
 			g.setColor(Color.green); //setting it's color to green
-			g.fillRect(0, 0, 600, 1000); //making a square of the set color
+			g.fillRect(0, 0, 600, 1500); //making a square of the set color
 			g.setColor(Color.black);
-			g.fillRect(200-(cam.X()), 0-(cam.Y()), 200, 1000);
+			g.fillRect(200-(cam.X()), 0-(cam.Y()), 200, 1500);
+			g.setColor(Color.white);
+			g.fillRect(265-cam.X(), 0-cam.Y(), 5, 1500);
+			g.fillRect(330-cam.X(), 0-cam.Y(), 5, 1500);
+			
+			//this is where the sim moves and renders all the cars
 			for(Car_One c: cars){
+				
+				c.think(cars);
+				if(c.isLane() == -1){
+					c.isLane(0); // right now the sim just denies any lane change requests				}
+				}
+				else if(c.isLane() == 1){
+					c.isLane(0);
+				}
+				
+				//up ahead we get the car going the speed it wants to go, within limits
+				
+				if(c.X() < 400){
+					// if the car is not on a ramp....
+					if(c.setSpeed() <= topspeed && c.setSpeed() != c.speed()){
+						if(c.setSpeed() > c.speed()){
+							c.speed(c.speed()+acceleration);
+						}
+						else{
+							c.speed(c.speed()-acceleration);
+						}
+					}
+					
+				}
+				else{//if the car is on a ramp...
+					if(c.setSpeed() <= rampspeed && c.setSpeed() != c.speed()){
+						if(c.setSpeed() > c.speed()){
+							c.speed(c.speed()+acceleration);
+						}
+						else{
+							c.speed(c.speed()-acceleration);
+						}
+					}
+					
+				}
+				c.move(c.X(), c.Y()+c.speed());
+				
+				
+				
 				c.drawMe(g,cam); //this will render out all the cars, we send our Graphics helper to each car
 			}
 			
@@ -111,9 +158,6 @@ public class Sim{
 			strategy.show(); //update the display
 			
 			try { Thread.sleep(10); } catch (Exception e) {}	//limits out FPS a tad on purpose
-			if (time >10){
-				running = false; //currently the only way to kill the simulator is to tell it to die after 10 seconds
-			}
 		}
 		
 	}
