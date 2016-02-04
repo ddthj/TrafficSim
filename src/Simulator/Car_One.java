@@ -2,6 +2,7 @@ package Simulator;
 
 import java.awt.Color;
 import java.util.ArrayList;
+import java.util.Random;
 
 public class Car_One{
 	private int setSpeed; //This is the speed the car wants to go
@@ -14,7 +15,7 @@ public class Car_One{
 	private int ticksAlive = 0; //how many game ticks have passed since creation
 	private boolean blinker = false;
 	private boolean atDest = false; //we will set this to true for the sim to delete the car
-	private int speed = 0;
+	private double speed = 0;
 	
 	public Car_One(Color co,int spawn,int dest){
 		color = co;
@@ -49,11 +50,11 @@ public class Car_One{
 	public int setSpeed(){
 		return setSpeed;
 	}
-	public int speed(){
+	public double speed(){
 		return speed;
 	}
-	public void speed(int z){
-		speed = z;
+	public void speed(double z){
+		speed =  z;
 	}
 	public int X(){
 		return posX;
@@ -61,13 +62,16 @@ public class Car_One{
 	public int Y(){
 		return posY;
 	}
-	public void move(int x, int y){
-		posX = x; //only used for lane changes
-		posY = y;
+	public Color color(){
+		return color;
+	}
+	public void move(double x, double y){
+		posX = (int)x; //only used for lane changes
+		posY = (int)y;
 	}
 	public void think(ArrayList<Car_One> cars){
 		//this is where the car will make all of it's decisions based on surrounding traffic and distance until destination
-		setSpeed = 10;
+		setSpeed = 25;
 	}
 	
 
