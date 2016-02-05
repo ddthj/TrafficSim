@@ -21,18 +21,8 @@ public class Car_One{
 		color = co;
 		spawnpoint = spawn;
 		destination = dest;
-		if(spawnpoint == 1){
-			posX = 210;
-			posY = 100;
-		}
-		else if (spawnpoint == 2){
-			posX = 340;
-			posY = 100;
-		}
-		else if (spawnpoint == 3){
-			posX = 275;
-			posY = 100;
-		}
+		posX = 410;
+		posY = 50;
 		//eventually here we will set the x and y coordinates of the car to wherever the spawnpoint is
 	}
 	
@@ -65,13 +55,25 @@ public class Car_One{
 	public Color color(){
 		return color;
 	}
+	public int Dest(){
+		return destination;
+	}
 	public void move(double x, double y){
 		posX = (int)x; //only used for lane changes
 		posY = (int)y;
 	}
 	public void think(ArrayList<Car_One> cars){
 		//this is where the car will make all of it's decisions based on surrounding traffic and distance until destination
-		setSpeed = 25;
+		if(posX>400){
+			setSpeed = 5;
+		}
+		else{
+			setSpeed = 10;
+		}
+		if(posX >210){
+			setLane = -1;
+		}
+		
 	}
 	
 
