@@ -20,11 +20,27 @@ public class Sim extends JPanel {
 	int y = 0;
 	static long time = 0;
 	static long oldtime = 0;
-	static int rampspeed = 5;
+	static long old = 0;
+	static int rampspeed = 6;
 	static int topspeed = 10;
-	static double acceleration = 0.2;
+	static double acceleration = 0.1;
 
 	private void moveCars() {
+		for(int i = cars.size()-1; i >=0; i--){
+			if(cars.get(i).X() >400 && cars.get(i).Y()>1050 && cars.get(i).Y() <14000 ){
+				cars.get(i).crashed(true);
+			}
+		}
+		for(int i = cars.size()-1; i>=0; i--){
+			//if(cars.get(i).Y() > 14950){
+			//	cars.remove(i);
+			//}
+			for(int j = cars.size()-1; j>=0; j--){
+				if(!cars.get(i).equals(cars.get(j)) && cars.get(i).X() == cars.get(j).X() && cars.get(i).Y()+100 >= cars.get(j).Y()&& cars.get(i).Y()<=cars.get(j).Y()+100){	
+					cars.get(j).crashed(true);
+				}
+			}
+		}		
 		for(Car_One c: cars){
 		c.think(cars);
 		x = c.X();
@@ -32,14 +48,14 @@ public class Sim extends JPanel {
 		boolean change = true;
 		if(c.isLane() == -1){
 			for(Car_One b: cars){
-				if(x > b.X() && y >= b.Y() && y<= b.Y() +100){
+				if(b.X() > x && y >= b.Y() && y<= b.Y() +100){
 					change = false;
 				}
 			}
 		}
 		else if(c.isLane() == 1){
 			for(Car_One b: cars){
-				if(x < b.X() && y >= b.Y() && y<= b.Y() +100){
+				if(x > b.X() && y >= b.Y() && y<= b.Y() +100){
 					change = false;
 				}
 			}
@@ -74,24 +90,53 @@ public class Sim extends JPanel {
 			}
 			
 		}
+		
+		int newPos = c.X();
+		
 		if(change){
-			c.move(c.X()+(c.isLane()*3), c.Y()+c.speed());
+			//X coordinate for lanes are 208, 274, and 340 
+			if (c.isLane()==-1){
+				if(c.X() == 274){
+					newPos = 208;
+				}
+				else if(c.X()==340){
+					newPos = 274;
+				}
+				else if(c.X() > 340){
+					newPos = 340;
+				}
+				
+			}
+			else if (c.isLane() == 1){
+				if(c.X() == 340 && c.Y() >= 14000){
+					newPos = 410;
+				}
+				else if(c.X()==274){
+					newPos = 340;
+				}
+				else if(c.X() == 208){
+					newPos = 274;
+				}
+				
+			}
+			
+			c.move(newPos, c.Y()+c.speed());
 		}
+		
+		
+		
 		else{
 			c.move(c.X(), c.Y()+c.speed());
 		}
 		c.isLane(0);
 		
+		if(c.Y() >= 15000){
+			c.move(c.X(),0);
+		}
+		
 		
 		}
-		for(int i = cars.size()-1; i>=0; i--){
-			if(cars.get(i).Y() > 14950){
-				cars.remove(i);
-			}
-			if(cars.get(i).X() >400 && cars.get(i).Y()>1050 && cars.get(i).Y() <14000 ){
-				cars.remove(i);
-			}
-		}
+		
 	}
 	
 	@Override
@@ -158,7 +203,7 @@ public class Sim extends JPanel {
 		while (true) {
 			time = (System.nanoTime()/100000000) - starttime;
 			// the below if statement governs the creation of cars
-			if(time > oldtime+2){
+			if(time > oldtime+8){
 				oldtime = time;
 				int Num = rand.nextInt((5 - 1) + 1) + 1;
 				Color randColor;
@@ -178,28 +223,13 @@ public class Sim extends JPanel {
 				else{
 					randColor = Color.gray;
 				}
-				cars.add(new Car_One(randColor, 50, 15000));
-				
-				Num = rand.nextInt((5 - 1) + 1) + 1;
-				
-				if(Num == 1){
-					randColor = Color.blue;
-				}
-				else if (Num == 2){
-					randColor = Color.green;
-				}
-				else if (Num == 3){
-					randColor = Color.orange;
-				}
-				else if (Num == 4){
-					randColor = Color.red;
-				}
-				else{
-					randColor = Color.gray;
-				}
-				cars.add(new Car_One(randColor, 50, 15000));
+				cars.add(new Car_One(randColor, 150, 15000));	
 			}
-			
+			for(int i = cars.size()-1; i >=0; i--){
+				if(cars.get(i).crashed()){
+					cars.remove(i);
+				}
+			}
 			//move the cars as they wish (within limits) and repaint their new locations
 			sim.moveCars();
 			sim.repaint();
