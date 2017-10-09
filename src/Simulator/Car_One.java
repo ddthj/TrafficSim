@@ -99,6 +99,9 @@ public class Car_One{
 				setLane = 1;
 				setSpeed = 2;
 			}
+			if(setLane == 1 && c.Y() > posY && c.Y() < posY+130){
+				setLane = 0;
+			}
 		}		
 	}
 }
